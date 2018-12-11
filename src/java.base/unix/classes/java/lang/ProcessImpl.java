@@ -95,7 +95,9 @@ final class ProcessImpl extends Process {
 
         SOLARIS(LaunchMechanism.POSIX_SPAWN, LaunchMechanism.FORK),
 
-        AIX(LaunchMechanism.POSIX_SPAWN, LaunchMechanism.FORK);
+        AIX(LaunchMechanism.POSIX_SPAWN, LaunchMechanism.FORK),
+
+        HAIKU(LaunchMechanism.VFORK, LaunchMechanism.FORK);
 
         final LaunchMechanism defaultLaunchMechanism;
         final Set<LaunchMechanism> validLaunchMechanisms;
@@ -141,6 +143,7 @@ final class ProcessImpl extends Process {
             if (osName.contains("OS X")) { return BSD; }
             if (osName.equals("SunOS")) { return SOLARIS; }
             if (osName.equals("AIX")) { return AIX; }
+            if (osName.equals("Haiku")) { return HAIKU; }
 
             throw new Error(osName + " is not a supported OS platform.");
         }
@@ -353,6 +356,7 @@ final class ProcessImpl extends Process {
         switch (platform) {
             case LINUX:
             case BSD:
+            case HAIKU:
                 stdin = (fds[0] == -1) ?
                         ProcessBuilder.NullOutputStream.INSTANCE :
                         new ProcessPipeOutputStream(fds[0]);
@@ -507,6 +511,7 @@ final class ProcessImpl extends Process {
             case LINUX:
             case BSD:
             case AIX:
+            case HAIKU:
                 // There is a risk that pid will be recycled, causing us to
                 // kill the wrong process!  So we only terminate processes
                 // that appear to still be running.  Even with this check,

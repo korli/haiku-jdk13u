@@ -46,7 +46,7 @@
 #include "java_props_macosx.h"
 #endif
 
-#if defined(_ALLBSD_SOURCE)
+#if defined(_ALLBSD_SOURCE) || defined(__HAIKU__)
 #if !defined(P_tmpdir)
 #include <paths.h>
 #define P_tmpdir _PATH_VARTMP
@@ -56,7 +56,7 @@
 #include "locale_str.h"
 #include "java_props.h"
 
-#if !defined(_ALLBSD_SOURCE)
+#if !defined(_ALLBSD_SOURCE) && !defined(__HAIKU__)
 #ifdef __linux__
   #ifndef CODESET
   #define CODESET _NL_CTYPE_CODESET_NAME

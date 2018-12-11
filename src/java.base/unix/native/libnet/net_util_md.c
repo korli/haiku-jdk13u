@@ -288,7 +288,7 @@ jint  IPv4_supported()
     return JNI_TRUE;
 }
 
-#if defined(DONT_ENABLE_IPV6)
+#if defined(DONT_ENABLE_IPV6) || defined (__HAIKU__)
 jint  IPv6_supported()
 {
     return JNI_FALSE;
