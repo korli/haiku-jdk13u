@@ -1054,7 +1054,7 @@ void ThreadSafepointState::print_on(outputStream *st) const {
   const char *s = _safepoint_safe ? "_at_safepoint" : "_running";
 
   st->print_cr("Thread: " INTPTR_FORMAT
-              "  [0x%2lx] State: %s _at_poll_safepoint %d",
+              "  [0x" OSTHREADID_FORMAT_HEX2 "] State: %s _at_poll_safepoint %d",
                p2i(_thread), _thread->osthread()->thread_id(), s, _at_poll_safepoint);
 
   _thread->print_thread_state_on(st);
