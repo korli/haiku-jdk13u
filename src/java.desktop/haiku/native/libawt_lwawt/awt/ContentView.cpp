@@ -401,7 +401,7 @@ ContentView::_HandleDropTargetMessage(jint id, uint32 transit,
 }
 
 
-DECLARE_JAVA_CLASS(dragSourceClazz, "sun/hawt/HaikuDragSourceContextPeer")
+//DECLARE_JAVA_CLASS(dragSourceClazz, "sun/hawt/HaikuDragSourceContextPeer")
 
 
 void

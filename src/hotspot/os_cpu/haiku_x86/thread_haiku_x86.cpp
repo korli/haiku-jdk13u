@@ -26,6 +26,12 @@
 #include "runtime/frame.inline.hpp"
 #include "runtime/thread.inline.hpp"
 
+frame JavaThread::pd_last_frame() {
+  assert(has_last_Java_frame(), "must have last_Java_sp() when suspended");
+  vmassert(_anchor.last_Java_pc() != NULL, "not walkable");
+  return frame(_anchor.last_Java_sp(), _anchor.last_Java_fp(), _anchor.last_Java_pc());
+}
+
 // For Forte Analyzer AsyncGetCallTrace profiling support - thread is
 // currently interrupted by SIGPROF
 bool JavaThread::pd_get_top_frame_for_signal_handler(frame* fr_addr,

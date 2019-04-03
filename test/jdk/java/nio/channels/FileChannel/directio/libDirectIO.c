@@ -52,6 +52,9 @@ JNIEXPORT jboolean Java_DirectIOTest_isFileInCache0(JNIEnv *env,
                                                 jclass cls,
                                                 jint file_size,
                                                 jstring file_path) {
+#ifdef __HAIKU__
+    return JNI_FALSE;
+#else
     void *f_mmap;
 #ifdef __linux__
     unsigned char *f_seg;
@@ -100,4 +103,5 @@ JNIEXPORT jboolean Java_DirectIOTest_isFileInCache0(JNIEnv *env,
     close(fd);
     munmap(f_mmap, file_size);
     return result;
+#endif
 }

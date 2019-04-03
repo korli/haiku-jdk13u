@@ -86,7 +86,7 @@
 
 address os::current_stack_pointer() {
 #ifdef SPARC_WORKS
-  register void *esp;
+  void *esp;
   __asm__("mov %%"SPELL_REG_SP", %0":"=r"(esp));
   return (address) ((char*)esp + sizeof(long)*2);
 #elif defined(__clang__)
@@ -105,10 +105,6 @@ char* os::non_memory_address_word() {
   // if the CPU splits constants across multiple instructions).
 
   return (char*) -1;
-}
-
-void os::initialize_thread(Thread* thr) {
-// Nothing to do.
 }
 
 address os::Haiku::ucontext_get_pc(const ucontext_t * uc) {
@@ -221,7 +217,7 @@ frame os::get_sender_for_C_frame(frame* fr) {
 
 intptr_t* _get_previous_fp() {
 #ifdef SPARC_WORKS
-  register intptr_t **ebp;
+  intptr_t **ebp;
   __asm__("mov %%"SPELL_REG_FP", %0":"=r"(ebp));
 #elif defined(__clang__)
   intptr_t **ebp;
@@ -229,7 +225,15 @@ intptr_t* _get_previous_fp() {
 #else
   register intptr_t **ebp __asm__ (SPELL_REG_FP);
 #endif
-  return (intptr_t*) *ebp;   // we want what it points to.
+  // ebp is for this frame (_get_previous_fp). We want the ebp for the
+  // caller of os::current_frame*(), so go up two frames. However, for
+  // optimized builds, _get_previous_fp() will be inlined, so only go
+  // up 1 frame in that case.
+#ifdef _NMT_NOINLINE_
+  return **(intptr_t***)ebp;
+#else
+  return *ebp;
+#endif
 }
 
 
@@ -450,7 +454,7 @@ JVM_handle_haiku_signal(int sig,
         }
 #endif // AMD64
       } else if (sig == SIGSEGV &&
-               !MacroAssembler::needs_explicit_null_check((intptr_t)info->si_addr)) {
+               MacroAssembler::uses_implicit_null_check(info->si_addr)) {
           // Determination of interpreter/vtable stub/compiled code null exception
           stub = SharedRuntime::continuation_for_implicit_exception(thread, pc, SharedRuntime::IMPLICIT_NULL);
       }
@@ -468,17 +472,6 @@ JVM_handle_haiku_signal(int sig,
       if (addr != (address)-1) {
         stub = addr;
       }
-    }
-
-    // Check to see if we caught the safepoint code in the
-    // process of write protecting the memory serialization page.
-    // It write enables the page immediately after protecting it
-    // so we can just return to retry the write.
-    if ((sig == SIGSEGV) &&
-        os::is_memory_serialize_page(thread, (address) info->si_addr)) {
-      // Block current thread until the memory serialize page permission restored.
-      os::block_on_serialize_page_trap();
-      return true;
     }
   }
 

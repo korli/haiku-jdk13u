@@ -261,7 +261,9 @@ void os::init_system_properties_values() {
       }
     }
     Arguments::set_java_home(buf);
-    set_boot_path('/', ':');
+    if (!set_boot_path('/', ':')) {
+      vm_exit_during_initialization("Failed setting boot class path.", NULL);
+    }
   }
 
   // Where to look for native libraries.
@@ -417,6 +419,9 @@ void os::Haiku::hotspot_sigmask(Thread* thread) {
 
 // Thread start routine for all newly created threads
 static void *thread_native_entry(Thread *thread) {
+
+  thread->record_stack_base_and_size();
+
   // Try to randomize the cache line index of hot stack frames.
   // This helps when threads of the same stack traces evict each other's
   // cache lines. The threads can be either from the same JVM instance, or
@@ -455,19 +460,14 @@ static void *thread_native_entry(Thread *thread) {
   }
 
   // call one more level start routine
-  thread->run();
+  thread->call_run();
+
+  // Note: at this point the thread object may already have deleted itself.
+  // Prevent dereferencing it from here on out.
+  thread = NULL;
 
   log_info(os, thread)("Thread finished (tid: " UINTX_FORMAT ", kernel thread "
     "id: " OSTHREADID_FORMAT ").", os::current_thread_id(), find_thread(NULL));
-
-  // If a thread has not deleted itself ("delete this") as part of its
-  // termination sequence, we have to ensure thread-local-storage is
-  // cleared before we actually terminate. No threads should ever be
-  // deleted asynchronously with respect to their termination.
-  if (Thread::current_or_null_safe() != NULL) {
-    assert(Thread::current_or_null_safe() == thread, "current thread is wrong");
-    thread->clear_thread_current();
-  }
 
   return 0;
 }
@@ -762,23 +762,6 @@ void os::die() {
 }
 
 
-// This method is a copy of JDK's sysGetLastErrorString
-// from src/solaris/hpi/src/system_md.c
-
-size_t os::lasterror(char *buf, size_t len) {
-
-  if (errno == 0)  return 0;
-
-  const char *s = ::strerror(errno);
-  size_t n = ::strlen(s);
-  if (n >= len) {
-    n = len - 1;
-  }
-  ::strncpy(buf, s, n);
-  buf[n] = '\0';
-  return n;
-}
-
 intx os::current_thread_id() { return (intx)pthread_self(); }
 int os::current_process_id() {
   return getpid();
@@ -909,10 +892,10 @@ void * os::dll_load(const char *filename, char *ebuf, int ebuflen)
   }
 
   typedef struct {
-    Elf32_Half  code;         // Actual value as defined in elf.h
-    Elf32_Half  compat_class; // Compatibility of archs at VM's sense
-    char        elf_class;    // 32 or 64 bit
-    char        endianess;    // MSB or LSB
+    Elf32_Half    code;         // Actual value as defined in elf.h
+    Elf32_Half    compat_class; // Compatibility of archs at VM's sense
+    unsigned char elf_class;    // 32 or 64 bit
+    unsigned char endianess;    // MSB or LSB
     char*       name;         // String representation
   } arch_t;
 
@@ -1512,10 +1495,12 @@ void os::large_page_init() {
 }
 
 char* os::reserve_memory_special(size_t bytes, size_t alignment, char* req_addr, bool exec) {
+  fatal("os::reserve_memory_special should not be called on Haiku.");
   return NULL;
 }
 
 bool os::release_memory_special(char* base, size_t bytes) {
+  fatal("os::release_memory_special should not be called on Haiku.");
   return false;
 }
 
@@ -1555,8 +1540,10 @@ char* os::pd_attempt_reserve_memory_at(size_t bytes, char* requested_addr) {
   	return addr;
   }
 
-  int result = anon_munmap(addr, bytes);
-  assert(result, "munmap failed");
+  if (addr != NULL) {
+    int result = anon_munmap(addr, bytes);
+    assert(result, "munmap failed");
+  }
   return NULL;
 }
 
@@ -1658,10 +1645,6 @@ OSReturn os::get_native_priority(const Thread* const thread, int *priority_ptr) 
     return OS_ERR;
   }
 }
-
-// Hint to the underlying OS that a task switch would not be good.
-// Void return because it's a hint and can fail.
-void os::hint_no_preempt() {}
 
 ////////////////////////////////////////////////////////////////////////////////
 // suspend/resume support
@@ -2368,9 +2351,11 @@ extern "C" {
 }
 
 // this is called _after_ the global arguments have been parsed
-jint os::init_2(void)
-{
-  os::Posix::init_2();
+jint os::init_2(void) {
+
+  // This could be set after os::Posix::init() but all platforms
+  // have to set it the same so we have to mirror Solaris.
+  DEBUG_ONLY(os::set_mutex_init_done();)
 
   // initialize suspend/resume support - must do this before signal_sets_init()
   if (SR_initialize() != 0) {
@@ -2545,7 +2530,7 @@ size_t os::current_stack_size() {
 static inline struct timespec get_mtime(const char* filename) {
   struct stat st;
   int ret = os::stat(filename, &st);
-  assert(ret == 0, "failed to stat() file '%s': %s", filename, strerror(errno));
+  assert(ret == 0, "failed to stat() file '%s': %s", filename, os::strerror(errno));
   return st.st_mtim;
 }
 
@@ -2593,7 +2578,7 @@ bool os::dir_is_empty(const char* path) {
   /* Scan the directory */
   bool result = true;
   char buf[sizeof(struct dirent) + MAX_PATH];
-  while (result && (ptr = ::readdir(dir)) != NULL) {
+  while (result && (ptr = readdir(dir)) != NULL) {
     if (strcmp(ptr->d_name, ".") != 0 && strcmp(ptr->d_name, "..") != 0) {
       result = false;
     }

@@ -25,7 +25,7 @@
 
 #ifdef _ALLBSD_SOURCE
 #include <machine/endian.h>
-#elif __linux__
+#elif defined(__linux__)
 #define __USE_BSD 1
 #include <endian.h>
 #endif
