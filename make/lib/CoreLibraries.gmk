@@ -95,10 +95,17 @@ ifeq ($(call isTargetOs, macosx), true)
   BUILD_LIBJAVA_java_props_macosx.c_CFLAGS := -x objective-c
 endif
 
+ifeq ($(call isTargetOs, haiku), true)
+  LIBJAVA_EXCLUDE_FILES += TimeZone_md.c
+endif
+
 $(eval $(call SetupJdkLibrary, BUILD_LIBJAVA, \
     NAME := java, \
+    EXCLUDE_FILES := $(LIBJAVA_EXCLUDE_FILES), \
     OPTIMIZATION := HIGH, \
     CFLAGS := $(CFLAGS_JDKLIB) \
+        $(LIBJAVA_CFLAGS), \
+    CXXFLAGS := $(CXXFLAGS_JDKLIB) \
         $(LIBJAVA_CFLAGS), \
     jdk_util.c_CFLAGS := $(VERSION_CFLAGS), \
     EXTRA_HEADER_DIRS := libfdlibm, \
@@ -187,10 +194,6 @@ TARGETS += $(BUILD_LIBJIMAGE)
 
 ifeq ($(call isTargetOs, macosx), true)
   LIBJLI_EXCLUDE_FILES += java_md_solinux.c
-endif
-
-ifeq ($(call isTargetOs, haiku), true)
-  LIBJAVA_EXCLUDE_FILES += TimeZone_md.c
 endif
 
 ifeq ($(call isTargetOs, windows), true)
