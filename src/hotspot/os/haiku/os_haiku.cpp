@@ -1889,8 +1889,6 @@ static void signalHandler(int sig, siginfo_t* info, void* uc) {
 bool os::Haiku::signal_handlers_are_installed = false;
 
 // For signal-chaining
-struct sigaction os::Haiku::sigact[MAXSIGNUM];
-unsigned int os::Haiku::sigs = 0;
 bool os::Haiku::libjsig_is_loaded = false;
 typedef struct sigaction *(*get_signal_t)(int);
 get_signal_t os::Haiku::get_signal_action = NULL;
@@ -1904,7 +1902,7 @@ struct sigaction* os::Haiku::get_chained_signal_action(int sig) {
   }
   if (actp == NULL) {
     // Retrieve the preinstalled signal handler from jvm
-    actp = get_preinstalled_handler(sig);
+    actp = os::Posix::get_preinstalled_handler(sig);
   }
 
   return actp;
@@ -1967,19 +1965,6 @@ bool os::Haiku::chained_handler(int sig, siginfo_t* siginfo, void* context) {
   return chained;
 }
 
-struct sigaction* os::Haiku::get_preinstalled_handler(int sig) {
-  if ((( (unsigned int)1 << sig ) & sigs) != 0) {
-    return &sigact[sig];
-  }
-  return NULL;
-}
-
-void os::Haiku::save_preinstalled_handler(int sig, struct sigaction& oldAct) {
-  assert(sig > 0 && sig < MAXSIGNUM, "vm signal out of expected range");
-  sigact[sig] = oldAct;
-  sigs |= (unsigned int)1 << sig;
-}
-
 // for diagnostic
 int os::Haiku::sigflags[MAXSIGNUM];
 
@@ -2009,7 +1994,7 @@ void os::Haiku::set_signal_handler(int sig, bool set_installed) {
       return;
     } else if (UseSignalChaining) {
       // save the old handler in jvm
-      save_preinstalled_handler(sig, oldAct);
+      os::Posix::save_preinstalled_handler(sig, oldAct);
       // libjsig also interposes the sigaction() call below and saves the
       // old sigaction on it own.
     } else {
