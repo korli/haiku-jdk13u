@@ -26,6 +26,7 @@
 #define OS_HAIKU_OS_HAIKU_INLINE_HPP
 
 #include "runtime/os.hpp"
+#include "os_posix.inline.hpp"
 
 // System includes
 

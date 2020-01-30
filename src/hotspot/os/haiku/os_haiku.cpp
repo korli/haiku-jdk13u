@@ -37,6 +37,7 @@
 #include "memory/filemap.hpp"
 #include "oops/oop.inline.hpp"
 #include "os_haiku.inline.hpp"
+#include "os_posix.inline.hpp"
 #include "os_share_haiku.hpp"
 #include "prims/jniFastGetField.hpp"
 #include "prims/jvm_misc.hpp"
