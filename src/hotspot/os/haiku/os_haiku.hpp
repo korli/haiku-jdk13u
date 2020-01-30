@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_HAIKU_VM_OS_HAIKU_HPP
-#define OS_HAIKU_VM_OS_HAIKU_HPP
+#ifndef OS_HAIKU_OS_HAIKU_HPP
+#define OS_HAIKU_OS_HAIKU_HPP
 
 // Haiku_OS defines the interface to the Haiku operating system
 
@@ -115,4 +115,4 @@ class Haiku {
 
 };
 
-#endif // OS_HAIKU_VM_OS_HAIKU_HPP
+#endif // OS_HAIKU_OS_HAIKU_HPP

@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_CPU_HAIKU_X86_VM_BYTES_HAIKU_X86_INLINE_HPP
-#define OS_CPU_HAIKU_X86_VM_BYTES_HAIKU_X86_INLINE_HPP
+#ifndef OS_CPU_HAIKU_X86_BYTES_HAIKU_X86_INLINE_HPP
+#define OS_CPU_HAIKU_X86_BYTES_HAIKU_X86_INLINE_HPP
 
 // Efficient swapping of data bytes from Java byte
 // ordering to native byte ordering and vice versa.
@@ -54,4 +54,4 @@ inline u8 Bytes::swap_u8(u8 x) {
 }
 #endif // !AMD64
 
-#endif // OS_CPU_HAIKU_X86_VM_BYTES_HAIKU_X86_INLINE_HPP
+#endif // OS_CPU_HAIKU_X86_BYTES_HAIKU_X86_INLINE_HPP

@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_CPU_HAIKU_X86_VM_THREAD_HAIKU_X86_HPP
-#define OS_CPU_HAIKU_X86_VM_THREAD_HAIKU_X86_HPP
+#ifndef OS_CPU_HAIKU_X86_THREAD_HAIKU_X86_HPP
+#define OS_CPU_HAIKU_X86_THREAD_HAIKU_X86_HPP
 
  private:
   void pd_initialize() {
@@ -65,4 +65,4 @@ public:
   static void enable_register_stack_guard() {}
   static void disable_register_stack_guard() {}
 
-#endif // OS_CPU_HAIKU_X86_VM_THREAD_HAIKU_X86_HPP
+#endif // OS_CPU_HAIKU_X86_THREAD_HAIKU_X86_HPP

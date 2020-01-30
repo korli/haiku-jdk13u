@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_CPU_HAIKU_X86_VM_OS_HAIKU_X86_INLINE_HPP
-#define OS_CPU_HAIKU_X86_VM_OS_HAIKU_X86_INLINE_HPP
+#ifndef OS_CPU_HAIKU_X86_OS_HAIKU_X86_INLINE_HPP
+#define OS_CPU_HAIKU_X86_OS_HAIKU_X86_INLINE_HPP
 
 #include "runtime/os.hpp"
 
@@ -43,4 +43,4 @@ inline jlong os::rdtsc() {
 #endif // AMD64
 }
 
-#endif // OS_CPU_HAIKU_X86_VM_OS_HAIKU_X86_INLINE_HPP
+#endif // OS_CPU_HAIKU_X86_OS_HAIKU_X86_INLINE_HPP

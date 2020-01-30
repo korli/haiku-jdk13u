@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_CPU_HAIKU_X86_VM_COPY_HAIKU_X86_INLINE_HPP
-#define OS_CPU_HAIKU_X86_VM_COPY_HAIKU_X86_INLINE_HPP
+#ifndef OS_CPU_HAIKU_X86_COPY_HAIKU_X86_INLINE_HPP
+#define OS_CPU_HAIKU_X86_COPY_HAIKU_X86_INLINE_HPP
 
 static void pd_conjoint_words(const HeapWord* from, HeapWord* to, size_t count) {
 #ifdef AMD64
@@ -306,4 +306,4 @@ static void pd_arrayof_conjoint_oops(const HeapWord* from, HeapWord* to, size_t 
 #endif // AMD64
 }
 
-#endif // OS_CPU_HAIKU_X86_VM_COPY_HAIKU_X86_INLINE_HPP
+#endif // OS_CPU_HAIKU_X86_COPY_HAIKU_X86_INLINE_HPP

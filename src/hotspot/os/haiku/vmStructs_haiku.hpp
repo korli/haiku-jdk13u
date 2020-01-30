@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_AIX_VM_VMSTRUCTS_HAIKU_HPP
-#define OS_AIX_VM_VMSTRUCTS_HAIKU_HPP
+#ifndef OS_HAIKU_VMSTRUCTS_HAIKU_HPP
+#define OS_HAIKU_VMSTRUCTS_HAIKU_HPP
 
 // These are the OS-specific fields, types and integer
 // constants required by the Serviceability Agent. This file is
@@ -39,4 +39,4 @@
 
 #define VM_ADDRESSES_OS(declare_address, declare_preprocessor_address, declare_function)
 
-#endif // OS_AIX_VM_VMSTRUCTS_HAIKU_HPP
+#endif // OS_HAIKU_VMSTRUCTS_HAIKU_HPP

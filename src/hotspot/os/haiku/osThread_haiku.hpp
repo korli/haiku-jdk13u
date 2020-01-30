@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_HAIKU_VM_OSTHREAD_HAIKU_HPP
-#define OS_HAIKU_VM_OSTHREAD_HAIKU_HPP
+#ifndef OS_HAIKU_OSTHREAD_HAIKU_HPP
+#define OS_HAIKU_OSTHREAD_HAIKU_HPP
  public:
   typedef pid_t thread_id_t;
 
@@ -128,4 +128,4 @@ private:
 // osThread_solaris.hpp 1.24 99/08/27 13:11:54
 // End
 
-#endif // OS_HAIKU_VM_OSTHREAD_HAIKU_HPP
+#endif // OS_HAIKU_OSTHREAD_HAIKU_HPP

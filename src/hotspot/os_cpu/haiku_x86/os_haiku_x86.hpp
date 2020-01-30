@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_CPU_HAIKU_X86_VM_OS_HAIKU_X86_HPP
-#define OS_CPU_HAIKU_X86_VM_OS_HAIKU_X86_HPP
+#ifndef OS_CPU_HAIKU_X86_OS_HAIKU_X86_HPP
+#define OS_CPU_HAIKU_X86_OS_HAIKU_X86_HPP
 
   static void setup_fpu();
   // Indicates whether OS supports SSE. The CPU is checked
@@ -38,4 +38,4 @@
   // Note: Currently only used in 64 bit Windows implementations
   static bool register_code_area(char *low, char *high) { return true; }
 
-#endif // OS_CPU_HAIKU_X86_VM_OS_HAIKU_X86_HPP
+#endif // OS_CPU_HAIKU_X86_OS_HAIKU_X86_HPP

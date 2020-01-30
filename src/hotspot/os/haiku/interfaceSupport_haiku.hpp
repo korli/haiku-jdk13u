@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_HAIKU_VM_INTERFACESUPPORT_HAIKU_HPP
-#define OS_HAIKU_VM_INTERFACESUPPORT_HAIKU_HPP
+#ifndef OS_HAIKU_INTERFACESUPPORT_HAIKU_HPP
+#define OS_HAIKU_INTERFACESUPPORT_HAIKU_HPP
 
 // Contains inlined functions for class InterfaceSupport
 
@@ -31,4 +31,4 @@ static inline void serialize_memory(JavaThread *thread) {
   os::write_memory_serialize_page(thread);
 }
 
-#endif // OS_HAIKU_VM_INTERFACESUPPORT_HAIKU_HPP
+#endif // OS_HAIKU_INTERFACESUPPORT_HAIKU_HPP

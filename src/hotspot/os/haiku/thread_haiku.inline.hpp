@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_LINUX_VM_THREAD_HAIKU_INLINE_HPP
-#define OS_LINUX_VM_THREAD_HAIKU_INLINE_HPP
+#ifndef OS_HAIKU_THREAD_HAIKU_INLINE_HPP
+#define OS_HAIKU_THREAD_HAIKU_INLINE_HPP
 
 #ifndef SHARE_VM_RUNTIME_THREAD_INLINE_HPP_SCOPE
 #error "This file should only be included from thread.inline.hpp"
@@ -36,4 +36,4 @@
 
 inline void ThreadLocalStorage::pd_invalidate_all() {} // nothing to do
 
-#endif // OS_LINUX_VM_THREAD_HAIKU_INLINE_HPP
+#endif // OS_HAIKU_THREAD_HAIKU_INLINE_HPP

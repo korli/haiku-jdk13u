@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_CPU_HAIKU_X86_VM_PREFETCH_HAIKU_X86_INLINE_HPP
-#define OS_CPU_HAIKU_X86_VM_PREFETCH_HAIKU_X86_INLINE_HPP
+#ifndef OS_CPU_HAIKU_X86_PREFETCH_HAIKU_X86_INLINE_HPP
+#define OS_CPU_HAIKU_X86_PREFETCH_HAIKU_X86_INLINE_HPP
 
 #include "runtime/prefetch.hpp"
 
@@ -44,4 +44,4 @@ inline void Prefetch::write(void *loc, intx interval) {
 #endif // AMD64
 }
 
-#endif // OS_CPU_HAIKU_X86_VM_PREFETCH_HAIKU_X86_INLINE_HPP
+#endif // OS_CPU_HAIKU_X86_PREFETCH_HAIKU_X86_INLINE_HPP

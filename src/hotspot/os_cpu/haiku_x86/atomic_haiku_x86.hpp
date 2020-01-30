@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_CPU_HAIKU_X86_VM_ATOMIC_HAIKU_X86_HPP
-#define OS_CPU_HAIKU_X86_VM_ATOMIC_HAIKU_X86_HPP
+#ifndef OS_CPU_HAIKU_X86_ATOMIC_HAIKU_X86_HPP
+#define OS_CPU_HAIKU_X86_ATOMIC_HAIKU_X86_HPP
 
 // Implementation of class atomic
 
@@ -169,4 +169,4 @@ inline void Atomic::PlatformStore<8>::operator()(T store_value,
 
 #endif // AMD64
 
-#endif // OS_CPU_HAIKU_X86_VM_ATOMIC_HAIKU_X86_HPP
+#endif // OS_CPU_HAIKU_X86_ATOMIC_HAIKU_X86_HPP

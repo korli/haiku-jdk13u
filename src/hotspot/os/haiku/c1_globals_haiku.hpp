@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_HAIKU_VM_C1_GLOBALS_HAIKU_HPP
-#define OS_HAIKU_VM_C1_GLOBALS_HAIKU_HPP
+#ifndef OS_HAIKU_C1_GLOBALS_HAIKU_HPP
+#define OS_HAIKU_C1_GLOBALS_HAIKU_HPP
 
 #include "utilities/globalDefinitions.hpp"
 #include "utilities/macros.hpp"
@@ -33,4 +33,4 @@
 // client compiler. (see c1_globals.hpp)
 //
 
-#endif // OS_HAIKU_VM_C1_GLOBALS_HAIKU_HPP
+#endif // OS_HAIKU_C1_GLOBALS_HAIKU_HPP

@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_HAIKU_VM_OS_SHARE_HAIKU_HPP
-#define OS_HAIKU_VM_OS_SHARE_HAIKU_HPP
+#ifndef OS_HAIKU_OS_SHARE_HAIKU_HPP
+#define OS_HAIKU_OS_SHARE_HAIKU_HPP
 
 // misc
 void handle_unexpected_exception(Thread* thread, int sig, siginfo_t* info, address pc, address adjusted_pc);
@@ -33,4 +33,4 @@ void continue_with_dump(void);
 
 #define PROCFILE_LENGTH 128
 
-#endif // OS_HAIKU_VM_OS_SHARE_HAIKU_HPP
+#endif // OS_HAIKU_OS_SHARE_HAIKU_HPP

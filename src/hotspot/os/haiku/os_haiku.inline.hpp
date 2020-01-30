@@ -22,8 +22,8 @@
  *
  */
 
-#ifndef OS_HAIKU_VM_OS_HAIKU_INLINE_HPP
-#define OS_HAIKU_VM_OS_HAIKU_INLINE_HPP
+#ifndef OS_HAIKU_OS_HAIKU_INLINE_HPP
+#define OS_HAIKU_OS_HAIKU_INLINE_HPP
 
 #include "runtime/os.hpp"
 
@@ -136,4 +136,4 @@ inline void os::exit(int num) {
   ::exit(num);
 }
 
-#endif // OS_HAIKU_VM_OS_HAIKU_INLINE_HPP
+#endif // OS_HAIKU_OS_HAIKU_INLINE_HPP
