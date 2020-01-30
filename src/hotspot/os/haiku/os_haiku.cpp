@@ -1547,14 +1547,6 @@ char* os::pd_attempt_reserve_memory_at(size_t bytes, char* requested_addr) {
   return NULL;
 }
 
-size_t os::read(int fd, void *buf, unsigned int nBytes) {
-  return ::read(fd, buf, nBytes);
-}
-
-size_t os::read_at(int fd, void *buf, unsigned int nBytes, jlong offset) {
-  return ::pread(fd, buf, nBytes, offset);
-}
-
 void os::naked_short_sleep(jlong ms) {
   struct timespec req;
 
