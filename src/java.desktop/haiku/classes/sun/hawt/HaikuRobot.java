@@ -43,10 +43,6 @@ class HaikuRobot implements RobotPeer {
     }
 
     @Override
-    public void dispose() {
-    }
-
-    @Override
     public void mouseMove(int x, int y) {
         // No real way to do this
     }
