@@ -131,9 +131,8 @@ static bool check_signals = true;
 static int SR_signum = SIGUSR2;
 sigset_t SR_sigset;
 
-// Declarations
-static void unpackTime(timespec* absTime, bool isAbsolute, jlong time);
 
+////////////////////////////////////////////////////////////////////////////////
 // utility functions
 
 static int SR_initialize();
@@ -1216,13 +1215,6 @@ void* os::user_handler() {
   return CAST_FROM_FN_PTR(void*, UserHandler);
 }
 
-static struct timespec create_semaphore_timespec(unsigned int sec, int nsec) {
-  struct timespec ts;
-  unpackTime(&ts, false, (sec * NANOSECS_PER_SEC) + nsec);
-
-  return ts;
-}
-
 extern "C" {
   typedef void (*sa_handler_t)(int);
   typedef void (*sa_sigaction_t)(int, siginfo_t *, void *);
@@ -1805,7 +1797,7 @@ static bool do_suspend(OSThread* osthread) {
 
   // managed to send the signal and switch to SUSPEND_REQUEST, now wait for SUSPENDED
   while (true) {
-    if (sr_semaphore.timedwait(create_semaphore_timespec(0, 2 * NANOSECS_PER_MILLISEC))) {
+    if (sr_semaphore.timedwait(2)) {
       break;
     } else {
       // timeout
@@ -1839,7 +1831,7 @@ static void do_resume(OSThread* osthread) {
 
   while (true) {
     if (sr_notify(osthread) == 0) {
-      if (sr_semaphore.timedwait(create_semaphore_timespec(0, 2 * NANOSECS_PER_MILLISEC))) {
+      if (sr_semaphore.timedwait(2)) {
         if (osthread->sr.is_running()) {
           return;
         }
@@ -2933,72 +2925,4 @@ bool os::start_debugging(char *buf, int buflen) {
     yes = false;
   }
   return yes;
-}
-
-// JSR166
-// -------------------------------------------------------
-
-// The solaris and linux implementations of park/unpark are fairly
-// conservative for now, but can be improved. They currently use a
-// mutex/condvar pair, plus _counter.
-// Park decrements _counter if > 0, else does a condvar wait.  Unpark
-// sets count to 1 and signals condvar.  Only one thread ever waits
-// on the condvar. Contention seen when trying to park implies that someone
-// is unparking you, so don't wait. And spurious returns are fine, so there
-// is no need to track notifications.
-
-#define MAX_SECS 100000000
-
-// This code is common to linux and solaris and will be moved to a
-// common place in dolphin.
-//
-// The passed in time value is either a relative time in nanoseconds
-// or an absolute time in milliseconds. Either way it has to be unpacked
-// into suitable seconds and nanoseconds components and stored in the
-// given timespec structure.
-// Given time is a 64-bit value and the time_t used in the timespec is only
-// a signed-32-bit value (except on 64-bit Linux) we have to watch for
-// overflow if times way in the future are given. Further on Solaris versions
-// prior to 10 there is a restriction (see cond_timedwait) that the specified
-// number of seconds, in abstime, is less than current_time  + 100,000,000.
-// As it will be 28 years before "now + 100000000" will overflow we can
-// ignore overflow and just impose a hard-limit on seconds using the value
-// of "now + 100,000,000". This places a limit on the timeout of about 3.17
-// years from "now".
-//
-static void unpackTime(timespec* absTime, bool isAbsolute, jlong time) {
-  assert(time > 0, "convertTime");
-
-  struct timeval now;
-  int status = gettimeofday(&now, NULL);
-  assert(status == 0, "gettimeofday");
-
-  time_t max_secs = now.tv_sec + MAX_SECS;
-
-  if (isAbsolute) {
-    jlong secs = time / 1000;
-    if (secs > max_secs) {
-      absTime->tv_sec = max_secs;
-    } else {
-      absTime->tv_sec = secs;
-    }
-    absTime->tv_nsec = (time % 1000) * NANOSECS_PER_MILLISEC;
-  } else {
-    jlong secs = time / NANOSECS_PER_SEC;
-    if (secs >= MAX_SECS) {
-      absTime->tv_sec = max_secs;
-      absTime->tv_nsec = 0;
-    } else {
-      absTime->tv_sec = now.tv_sec + secs;
-      absTime->tv_nsec = (time % NANOSECS_PER_SEC) + now.tv_usec*1000;
-      if (absTime->tv_nsec >= NANOSECS_PER_SEC) {
-        absTime->tv_nsec -= NANOSECS_PER_SEC;
-        ++absTime->tv_sec; // note: this must be <= max_secs
-      }
-    }
-  }
-  assert(absTime->tv_sec >= 0, "tv_sec < 0");
-  assert(absTime->tv_sec <= max_secs, "tv_sec > max_secs");
-  assert(absTime->tv_nsec >= 0, "tv_nsec < 0");
-  assert(absTime->tv_nsec < NANOSECS_PER_SEC, "tv_nsec >= nanos_per_sec");
 }
