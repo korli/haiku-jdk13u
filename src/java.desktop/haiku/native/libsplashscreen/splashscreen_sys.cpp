@@ -230,7 +230,7 @@ done:
 }
 
 
-void
+int
 SplashInitPlatform(Splash* splash) {
     pthread_mutex_init(&splash->lock, NULL);
 
@@ -244,6 +244,7 @@ SplashInitPlatform(Splash* splash) {
 
     BRect frame(0, 0, 0, 0);
     splash->window = (SplashWindow*)new SplashWindow(splash, frame, "Splashscreen");
+    return 1;
 }
 
 
