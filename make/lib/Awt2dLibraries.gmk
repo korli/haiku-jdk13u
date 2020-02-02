@@ -443,7 +443,7 @@ TARGETS += $(BUILD_LIBJAVAJPEG)
 
 ################################################################################
 
-# Mac and Windows only use the native AWT lib, do not build libawt_headless
+# Mac, Windows and Haiku only use the native AWT lib, do not build libawt_headless
 ifeq ($(call isTargetOs, windows macosx haiku), false)
 
   LIBAWT_HEADLESS_EXTRA_SRC := \
@@ -644,7 +644,7 @@ $(eval $(call SetupJdkLibrary, BUILD_LIBFONTMANAGER, \
 
 $(BUILD_LIBFONTMANAGER): $(BUILD_LIBAWT)
 
-ifeq ($(call isTargetOs, macosx haiku), true)
+ifeq ($(call isTargetOs, macosx), true)
   $(BUILD_LIBFONTMANAGER): $(call FindLib, $(MODULE), awt_lwawt)
 endif
 
@@ -705,8 +705,7 @@ else # not windows
 
   ifeq ($(call isTargetOs, macosx), true)
     JAWT_LIBS := -lawt_lwawt
-  else ifeq ($(OPENJDK_TARGET_OS), haiku)
-    JAWT_FILES := HaikuJawt.cpp
+  else ifeq ($(call isTargetOs, haiku), true)
     JAWT_LIBS := -lawt_lwawt
   else
     JAWT_LIBS :=
@@ -749,7 +748,7 @@ else # not windows
     $(BUILD_LIBJAWT): $(call FindLib, $(MODULE), awt_headless)
   endif
 
-  ifeq ($(call isTargetOs, macosx), true)
+  ifeq ($(call isTargetOs, macosx haiku), true)
    $(BUILD_LIBJAWT): $(call FindLib, $(MODULE), awt_lwawt)
   endif
 
@@ -818,7 +817,7 @@ ifeq ($(ENABLE_HEADLESS_ONLY), false)
 
   else ifeq ($(call isTargetOs, windows), true)
     LIBSPLASHSCREEN_CFLAGS += -DWITH_WIN32
-  else ifeq ($(OPENJDK_TARGET_OS), haiku)
+  else ifeq ($(call isTargetOs, haiku), true)
     LIBSPLASHSCREEN_CFLAGS += -DWITH_HAIKU \
         -I$(TOPDIR)/src/java.desktop/haiku/native/sun/awt/splashscreen \
         -I$(TOPDIR)/src/java.desktop/haiku/native/libhaikuapp
@@ -852,7 +851,7 @@ ifeq ($(ENABLE_HEADLESS_ONLY), false)
 
   LIBSPLASHSCREEN_LANG := C
 
-  ifeq ($(OPENJDK_TARGET_OS), haiku)
+  ifeq ($(call isTargetOs, haiku), true)
     LIBSPLASHSCREEN_LANG := C++
   endif
 
@@ -889,7 +888,7 @@ ifeq ($(ENABLE_HEADLESS_ONLY), false)
 
   ifeq ($(call isTargetOs, macosx), true)
     $(BUILD_LIBSPLASHSCREEN): $(call FindLib, $(MODULE), osxapp)
-  else ifeq ($(OPENJDK_TARGET_OS), haiku)
+  else ifeq ($(call isTargetOs, haiku), true)
     $(BUILD_LIBSPLASHSCREEN): $(call FindLib, $(MODULE), haikuapp)
   endif
 
@@ -967,7 +966,7 @@ endif
 
 ##########################################################################################
 
-ifeq ($(OPENJDK_TARGET_OS), haiku)
+ifeq ($(call isTargetOs, haiku), true)
 
   LIBAWT_LWAWT_EXTRA_SRC := \
       $(TOPDIR)/src/$(MODULE)/share/native/common/font \
@@ -993,7 +992,7 @@ ifeq ($(OPENJDK_TARGET_OS), haiku)
       INCLUDE_FILES := $(LIBAWT_LWAWT_FILES), \
       OPTIMIZATION := LOW, \
       DISABLED_WARNINGS_gcc := deprecated, \
-      CFLAGS := $(CFLAGS_JDKLIB) \
+      CFLAGS := -w $(CFLAGS_JDKLIB) \
           $(LIBAWT_LWAWT_CFLAGS), \
       EXTRA_HEADER_DIRS := $(LIBAWT_LWAWT_EXTRA_HEADER_DIRS), \
       LDFLAGS := $(LDFLAGS_JDKLIB) \

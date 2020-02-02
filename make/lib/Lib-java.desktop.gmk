@@ -60,7 +60,7 @@ ifeq ($(call isTargetOs, aix), false)
     LIBJSOUND_TOOLCHAIN := TOOLCHAIN_LINK_CXX
   endif
 
-  ifeq ($(OPENJDK_TARGET_OS), haiku)
+  ifeq ($(call isTargetOs, haiku), true)
     LIBJSOUND_LANG := C++
   endif
 
@@ -159,7 +159,7 @@ ifeq ($(call isTargetOs, haiku), true)
       NAME := haikuapp, \
       LANG := C++, \
       OPTIMIZATION := LOW, \
-      CFLAGS := $(CFLAGS_JDKLIB), \
+      CFLAGS := -w $(CFLAGS_JDKLIB), \
       LDFLAGS := $(LDFLAGS_JDKLIB) \
           $(call SET_SHARED_LIBRARY_ORIGIN), \
       LIBS := -lbe -lstdc++, \
