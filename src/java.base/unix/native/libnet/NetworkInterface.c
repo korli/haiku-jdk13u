@@ -22,6 +22,10 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
+#ifdef __HAIKU__
+// for getifaddrs()
+#define _BSD_SOURCE
+#endif
 #include <arpa/inet.h>
 #include <errno.h>
 #include <net/if.h>
@@ -54,7 +58,6 @@
 #include <sys/sockio.h>
 #include <net/if_dl.h>
 #include <net/if_types.h>
-#define _BSD_SOURCE
 #include <ifaddrs.h>
 #define IFF_RUNNING IFF_UP
 #define ETHER_ADDR_LEN	6
